@@ -8,7 +8,7 @@ import './style.css'
 import 'virtual:uno.css'
 
 if (import.meta.hot) {
-  handleHotUpdate(import.meta.hot)
+  handleHotUpdate(import.meta.hot as any)
 }
 
 const router = createRouter({

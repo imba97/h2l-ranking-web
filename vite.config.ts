@@ -18,7 +18,8 @@ export default defineConfig({
         'vue-router',
         'pinia'
       ],
-      dts: '.auto-generated/auto-imports.d.ts'
+      dts: '.auto-generated/auto-imports.d.ts',
+      vueTemplate: true
     }),
     Components({
       dts: '.auto-generated/components.d.ts'
