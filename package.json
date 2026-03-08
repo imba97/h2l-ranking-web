@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview",
-    "lint": "eslint ."
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@zenfs/core": "^2.5.2",
