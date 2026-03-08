@@ -12,7 +12,7 @@
   "dependencies": {
     "@zenfs/core": "^2.5.2",
     "@zenfs/dom": "^1.2.7",
-    "h2l-ranking": "^0.1.1",
+    "h2l-ranking": "^0.2.0",
     "pinia": "^3.0.4",
     "react-dnd-html5-backend": "^16.0.1",
     "vue": "^3.5.25",
