@@ -1,0 +1,38 @@
+{
+  "name": "h2l-ranking-web",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@zenfs/core": "^2.5.2",
+    "@zenfs/dom": "^1.2.7",
+    "h2l-ranking": "^0.1.1",
+    "pinia": "^3.0.4",
+    "react-dnd-html5-backend": "^16.0.1",
+    "vue": "^3.5.25",
+    "vue3-dnd": "^2.1.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^7.7.0",
+    "@types/node": "^24.10.1",
+    "@unocss/preset-web-fonts": "^66.6.6",
+    "@unocss/reset": "^66.6.6",
+    "@vitejs/plugin-vue": "^6.0.2",
+    "@vue/tsconfig": "^0.8.1",
+    "eslint": "^10.0.3",
+    "typescript": "~5.9.3",
+    "unocss": "^66.6.6",
+    "unplugin-auto-import": "^21.0.0",
+    "unplugin-vue-components": "^31.0.0",
+    "unplugin-vue-router": "^0.19.2",
+    "vite": "^8.0.0-beta.13",
+    "vue-router": "^5.0.3",
+    "vue-tsc": "^3.1.5"
+  }
+}

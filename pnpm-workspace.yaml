@@ -1,0 +1,8 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+overrides:
+  h2l-ranking: 'link:../h2l-ranking'
+onlyBuiltDependencies:
+  - esbuild
