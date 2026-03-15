@@ -38,18 +38,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import RankingBoard from '~/components/RankingBoard.vue'
 import ResourceExplorer from '~/components/ResourceExplorer.vue'
 import { useResourcesStore } from '~/stores/resources'
 
-const resourcesStore = useResourcesStore()
 const rankingBoardRef = ref()
 const explorerVisible = ref(true)
+const resourcesStore = useResourcesStore()
 
-onMounted(async () => {
-  await resourcesStore.loadAll()
-})
+// 自动初始化
+resourcesStore.loadAll()
 
 function handleUpload(files: File[]) {
   rankingBoardRef.value?.handleUpload(files)

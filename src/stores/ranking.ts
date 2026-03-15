@@ -10,6 +10,11 @@ export const useRankingStore = defineStore('ranking', () => {
     la: []
   })
 
+  // 加载状态（内部使用）
+  const $state = {
+    _initialized: false
+  }
+
   const addItem = (tier: RankingTier, item: RankingItem) => {
     rankings[tier].push(item)
   }
@@ -83,6 +88,10 @@ export const useRankingStore = defineStore('ranking', () => {
   }
 
   const loadFromStorage = async () => {
+    // 如果已经初始化且不为空，跳过
+    if ($state._initialized && (rankings.hang.length > 0 || rankings.upper.length > 0))
+      return
+
     const saved = localStorage.getItem('h2l-rankings')
     if (saved) {
       try {
@@ -102,6 +111,7 @@ export const useRankingStore = defineStore('ranking', () => {
         rankings.middle = await Promise.all((data.middle || []).map(restoreCoverUrl))
         rankings.lower = await Promise.all((data.lower || []).map(restoreCoverUrl))
         rankings.la = await Promise.all((data.la || []).map(restoreCoverUrl))
+        $state._initialized = true
       }
       catch (e) {
         console.error('Failed to load rankings:', e)

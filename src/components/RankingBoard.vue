@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import type { RankingItem, RankingTier } from '~/types'
 import H2lRanking from 'h2l-ranking'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import ConfirmDialog from '~/components/ConfirmDialog.vue'
 import RankingLinks from '~/components/RankingLinks.vue'
 import RankingRow from '~/components/RankingRow.vue'
@@ -123,9 +123,8 @@ const deleteDialog = ref({
   imageName: ''
 })
 
-onMounted(async () => {
-  await rankingStore.loadFromStorage()
-})
+// 自动初始化
+rankingStore.loadFromStorage()
 
 function openViewer(item: RankingItem) {
   h2lRankingRef.value?.openViewer(item.cover, item.url, item.title, item.description)

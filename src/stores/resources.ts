@@ -12,16 +12,25 @@ export const useResourcesStore = defineStore('resources', () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
+  // 加载状态（内部使用）
+  const $state = {
+    _initialized: false
+  }
+
   const totalSize = computed(() => {
     return images.value.reduce((sum, img) => sum + img.size, 0)
   })
 
   const loadAll = async () => {
+    if ($state._initialized && images.value.length > 0)
+      return
+
     isLoading.value = true
     error.value = null
     try {
       const list = await imageStorageService.listImages()
       images.value = list
+      $state._initialized = true
     }
     catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to load images'
