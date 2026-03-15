@@ -536,9 +536,9 @@
 </template>
 
 <script setup lang="ts">
-import ConfirmDialog from '~/components/ConfirmDialog.vue'
 import type { ImageResource } from '~/types'
 import { computed } from 'vue'
+import ConfirmDialog from '~/components/ConfirmDialog.vue'
 
 const props = defineProps<{
   images: ImageResource[]
