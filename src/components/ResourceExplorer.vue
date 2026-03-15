@@ -51,7 +51,7 @@
   padding: 12px;
   border-bottom: 1px solid #333;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
 }
 
@@ -59,14 +59,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 4px;
+  padding: 8px 8px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   transition: all 0.2s;
+  flex: 1;
+  white-space: nowrap;
 }
 
 .btn--primary {
@@ -98,24 +100,108 @@
   cursor: not-allowed;
 }
 
-.url-input {
+/* 弹窗样式 */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.url-input input {
-  flex: 1;
-  padding: 6px 10px;
+.dialog {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.dialog-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.dialog-close:hover {
+  background: #333;
+  color: #fff;
+}
+
+.dialog-body {
+  padding: 20px;
+}
+
+.url-dialog-input {
+  width: 100%;
+  padding: 10px 12px;
   background: #252525;
   border: 1px solid #333;
   border-radius: 6px;
   color: #ddd;
-  font-size: 12px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-.url-input input:focus {
+.url-dialog-input:focus {
   outline: none;
   border-color: #3b82f6;
+}
+
+.dialog-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 16px 20px;
+  border-top: 1px solid #333;
+}
+
+/* 过渡动画 */
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.dialog-enter-active .dialog,
+.dialog-leave-active .dialog {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.dialog-enter-from,
+.dialog-leave-to {
+  opacity: 0;
+}
+
+.dialog-enter-from .dialog,
+.dialog-leave-to .dialog {
+  transform: scale(0.95);
+  opacity: 0;
 }
 
 .hidden {
@@ -310,32 +396,25 @@
           class="btn btn--primary"
           @click="handleFileSelect"
         >
-          <span class="i-carbon-upload" />
-          Upload
+          <span class="i-carbon-image" />
+          图片
         </button>
+
         <button
-          class="btn btn--secondary"
+          class="btn btn--primary"
           @click="handleFolderSelect"
         >
           <span class="i-carbon-folder" />
-          Folder
+          目录
         </button>
 
-        <div class="url-input">
-          <input
-            v-model="urlInput"
-            type="text"
-            placeholder="Paste image URL..."
-            @keyup.enter="handleUrlSubmit"
-          >
-          <button
-            class="btn btn--small"
-            :disabled="!urlInput.trim()"
-            @click="handleUrlSubmit"
-          >
-            <span class="i-carbon-add" />
-          </button>
-        </div>
+        <button
+          class="btn btn--secondary"
+          @click="urlDialog.show = true"
+        >
+          <span class="i-carbon-link" />
+          URL
+        </button>
 
         <input
           ref="fileInputRef"
@@ -354,6 +433,39 @@
           @change="onFolderChange"
         >
       </div>
+
+      <!-- URL 输入弹窗 -->
+      <Teleport to="body">
+        <Transition name="dialog">
+          <div v-if="urlDialog.show" class="dialog-overlay" @click="urlDialog.show = false">
+            <div class="dialog" @click.stop>
+              <div class="dialog-header">
+                <h3>添加图片 URL</h3>
+                <button class="dialog-close" @click="urlDialog.show = false">
+                  <span class="i-carbon-close" />
+                </button>
+              </div>
+              <div class="dialog-body">
+                <input
+                  v-model="urlInput"
+                  type="text"
+                  placeholder="Paste image URL..."
+                  class="url-dialog-input"
+                  @keyup.enter="handleUrlSubmit"
+                >
+              </div>
+              <div class="dialog-footer">
+                <button class="btn btn--secondary" @click="urlDialog.show = false; urlInput = ''">
+                  取消
+                </button>
+                <button class="btn btn--primary" :disabled="!urlInput.trim()" @click="handleUrlSubmit">
+                  添加
+                </button>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </Teleport>
 
       <div v-if="isLoading" class="resource-loading">
         <span class="i-carbon-circle-dash animate-spin" />
@@ -447,6 +559,7 @@ const folderInputRef = ref<HTMLInputElement | null>(null)
 const urlInput = ref('')
 const draggingId = ref<string | null>(null)
 const clearDialog = ref({ show: false })
+const urlDialog = ref({ show: false })
 
 function handleFileSelect() {
   fileInputRef.value?.click()
@@ -482,6 +595,7 @@ function handleUrlSubmit() {
   if (url) {
     emit('addFromUrl', url)
     urlInput.value = ''
+    urlDialog.value.show = false
   }
 }
 
