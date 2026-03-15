@@ -449,7 +449,7 @@
                 <input
                   v-model="urlInput"
                   type="text"
-                  placeholder="Paste image URL..."
+                  placeholder="粘贴图片 URL..."
                   class="url-dialog-input"
                   @keyup.enter="handleUrlSubmit"
                 >
@@ -469,7 +469,7 @@
 
       <div v-if="isLoading" class="resource-loading">
         <span class="i-carbon-circle-dash animate-spin" />
-        Loading...
+        加载中...
       </div>
 
       <div v-else class="resource-grid">
@@ -500,21 +500,21 @@
 
         <div v-if="images.length === 0" class="resource-empty">
           <span class="i-carbon-image" />
-          <p>No images yet</p>
+          <p>暂无图片</p>
           <p class="text-sm text-gray-400">
-            Upload images or paste URLs
+            上传图片或粘贴 URL
           </p>
         </div>
       </div>
 
       <div class="resource-stats">
         <span class="resource-stats__info">
-          {{ images.length }} images · {{ formatSize(totalSize) }}
+          {{ images.length }} 张图片 · {{ formatSize(totalSize) }}
         </span>
         <button
           class="resource-stats__clear"
           :disabled="images.length === 0"
-          :title="images.length === 0 ? 'No images to clear' : 'Clear all images'"
+          :title="images.length === 0 ? '没有可清空的图片' : '清空所有图片'"
           @click="handleClearAll"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
