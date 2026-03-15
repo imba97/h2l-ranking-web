@@ -91,6 +91,7 @@
       draggable="true"
       :title="item.title"
       @click="emit('click', item)"
+      @mousedown="handleMouseDown(index, $event)"
       @dragstart="emit('dragStart', tier, index, $event)"
       @dragend="emit('dragEnd')"
       @dragover="handleDragOverItem(index, $event)"
@@ -122,6 +123,7 @@ const emit = defineEmits<{
   (e: 'dragLeaveRow', tier: RankingTier, e: DragEvent): void
   (e: 'dropRow', tier: RankingTier, e: DragEvent): void
   (e: 'wheel', e: WheelEvent): void
+  (e: 'middleClick', tier: RankingTier, index: number): void
 }>()
 
 function itemClasses(index: number) {
@@ -132,6 +134,13 @@ function itemClasses(index: number) {
 }
 
 const isDragOver = computed(() => props.dragOverTier === props.tier)
+
+function handleMouseDown(index: number, e: MouseEvent) {
+  if (e.button === 1) {
+    e.preventDefault()
+    emit('middleClick', props.tier, index)
+  }
+}
 
 function handleDragOverItem(index: number, e: DragEvent) {
   emit('dragOverItem', props.tier, index, e)

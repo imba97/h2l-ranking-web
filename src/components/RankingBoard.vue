@@ -46,6 +46,7 @@
             :drag-over-index="dragOverIndex[tier]"
             :drag-over-tier="dragOverTier"
             @click="openViewer"
+            @middle-click="handleMiddleClick"
             @drag-start="handleDragStart"
             @drag-end="handleDragEnd"
             @drag-over-item="handleDragOverItem"
@@ -128,6 +129,11 @@ onMounted(async () => {
 
 function openViewer(item: RankingItem) {
   h2lRankingRef.value?.openViewer(item.cover, item.url, item.title, item.description)
+}
+
+function handleMiddleClick(tier: RankingTier, index: number) {
+  // 只从排行榜中移除，不删除图片资源
+  rankingStore.removeItem(tier, index)
 }
 
 async function handleUpload(files: File[]) {
