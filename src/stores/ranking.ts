@@ -14,6 +14,10 @@ export const useRankingStore = defineStore('ranking', () => {
     rankings[tier].push(item)
   }
 
+  const insertItem = (tier: RankingTier, item: RankingItem, index: number) => {
+    rankings[tier].splice(index, 0, item)
+  }
+
   const removeItem = (tier: RankingTier, index: number) => {
     rankings[tier].splice(index, 1)
   }
@@ -120,6 +124,7 @@ export const useRankingStore = defineStore('ranking', () => {
   return {
     rankings,
     addItem,
+    insertItem,
     removeItem,
     updateItem,
     reorderItem,

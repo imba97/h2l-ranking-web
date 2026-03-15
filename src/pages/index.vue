@@ -541,6 +541,24 @@ function handleDropOnItem(tier: RankingTier, toIndex: number, e: DragEvent) {
   e.preventDefault()
   e.stopPropagation()
 
+  try {
+    const data = JSON.parse(e.dataTransfer?.getData('application/json') || '{}')
+
+    if (data.type === 'resource') {
+      // 从资源管理器拖入 - 插入到指定位置
+      rankingStore.insertItem(tier, {
+        title: data.name,
+        cover: data.src,
+        imageId: data.id
+      }, toIndex)
+      handleDragEnd()
+      return
+    }
+  }
+  catch {
+    // 忽略解析错误
+  }
+
   if (!draggedItem.value)
     return
 
