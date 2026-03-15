@@ -285,6 +285,22 @@ class ImageStorageService {
     }
     this.blobCache.clear()
   }
+
+  async clearAllImages(): Promise<void> {
+    await this.ensureInitialized()
+
+    // 清理 blob 缓存
+    this.clearCache()
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([STORE_NAME], 'readwrite')
+      const store = transaction.objectStore(STORE_NAME)
+      const request = store.clear()
+
+      request.onsuccess = () => resolve()
+      request.onerror = () => reject(new Error('Failed to clear all images'))
+    })
+  }
 }
 
 export const imageStorageService = new ImageStorageService()

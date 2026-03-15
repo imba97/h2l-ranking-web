@@ -82,6 +82,21 @@ export const useResourcesStore = defineStore('resources', () => {
     }
   }
 
+  const clearAll = async () => {
+    isLoading.value = true
+    error.value = null
+    try {
+      await imageStorageService.clearAllImages()
+      images.value = []
+    }
+    catch (e) {
+      error.value = e instanceof Error ? e.message : 'Failed to clear all images'
+    }
+    finally {
+      isLoading.value = false
+    }
+  }
+
   const getImageUrl = (id: string): string | null => {
     const img = images.value.find(i => i.id === id)
     return img?.src || null
@@ -96,6 +111,7 @@ export const useResourcesStore = defineStore('resources', () => {
     addImage,
     addFromUrl,
     removeImage,
+    clearAll,
     getImageUrl
   }
 })

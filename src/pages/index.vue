@@ -333,6 +333,7 @@
       @upload="handleUpload"
       @add-from-url="handleAddFromUrl"
       @delete-request="handleDeleteImageRequest"
+      @clear-all-request="handleClearAll"
     />
 
     <ConfirmDialog
@@ -595,5 +596,11 @@ async function handleConfirmDelete() {
 // 取消删除
 function handleCancelDelete() {
   deleteDialog.value.show = false
+}
+
+// 清空所有图片
+async function handleClearAll() {
+  await resourcesStore.clearAll()
+  rankingStore.clearAll()
 }
 </script>

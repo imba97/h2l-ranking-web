@@ -250,6 +250,44 @@
   color: #666;
   text-align: center;
   background: #151515;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.resource-stats__info {
+  flex: 1;
+}
+
+.resource-stats__clear {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.resource-stats__clear:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.resource-stats__clear:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.resource-stats__clear svg {
+  width: 16px;
+  height: 16px;
 }
 </style>
 
@@ -358,13 +396,35 @@
       </div>
 
       <div class="resource-stats">
-        {{ images.length }} images · {{ formatSize(totalSize) }}
+        <span class="resource-stats__info">
+          {{ images.length }} images · {{ formatSize(totalSize) }}
+        </span>
+        <button
+          class="resource-stats__clear"
+          :disabled="images.length === 0"
+          :title="images.length === 0 ? 'No images to clear' : 'Clear all images'"
+          @click="handleClearAll"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
       </div>
     </div>
+
+    <!-- 清空确认弹窗 -->
+    <ConfirmDialog
+      :show="clearDialog.show"
+      title="清空所有图片"
+      message="确定要清空所有图片吗？此操作不可撤销。"
+      @confirm="handleConfirmClearAll"
+      @cancel="clearDialog.show = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import ConfirmDialog from '~/components/ConfirmDialog.vue'
 import type { ImageResource } from '~/types'
 import { computed } from 'vue'
 
@@ -379,12 +439,14 @@ const emit = defineEmits<{
   (e: 'upload', files: File[]): void
   (e: 'addFromUrl', url: string): void
   (e: 'deleteRequest', id: string, name: string): void
+  (e: 'clearAllRequest'): void
 }>()
 
 const fileInputRef = ref<HTMLInputElement | null>(null)
 const folderInputRef = ref<HTMLInputElement | null>(null)
 const urlInput = ref('')
 const draggingId = ref<string | null>(null)
+const clearDialog = ref({ show: false })
 
 function handleFileSelect() {
   fileInputRef.value?.click()
@@ -421,6 +483,17 @@ function handleUrlSubmit() {
     emit('addFromUrl', url)
     urlInput.value = ''
   }
+}
+
+function handleClearAll() {
+  if (props.images.length === 0)
+    return
+  clearDialog.value.show = true
+}
+
+function handleConfirmClearAll() {
+  clearDialog.value.show = false
+  emit('clearAllRequest')
 }
 
 async function handlePaste(e: ClipboardEvent) {
